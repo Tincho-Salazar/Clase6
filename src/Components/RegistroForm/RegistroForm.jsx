@@ -9,7 +9,7 @@ import {
   Input,
   Stack,
   useColorModeValue,
-  HStack,
+  Alert,
   IconButton,
   InputGroup,
   InputRightElement,
@@ -54,6 +54,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const RegistroForm = () => {
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -63,6 +64,18 @@ const RegistroForm = () => {
 
   const TogglePassConfirmView = () => {
     setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const ManejoSubmit = (values, { resetForm }) => {
+    console.log(values); 
+    // Muestra el mensaje de éxito
+    setShowSuccessMessage(true);
+    // Limpia el formulario
+    resetForm();
+    //Oculta el mensaje
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000);
   };
 
   return (
@@ -88,6 +101,14 @@ const RegistroForm = () => {
         textAlign='center'>        
           Formulario de Registro        
         </Heading>
+
+        {showSuccessMessage && (
+          <Alert status="success" mb={4}>
+            {/* <AlertIcon /> */}
+            ¡Registro exitoso!
+          </Alert>
+        )};
+
         <Formik
           initialValues={{
             nombre: '',
@@ -98,7 +119,7 @@ const RegistroForm = () => {
             confirmarPassword: '',
           }}
           validationSchema={validationSchema}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={ManejoSubmit}
         >
           <Form noValidate>
             <Field name="nombre">
